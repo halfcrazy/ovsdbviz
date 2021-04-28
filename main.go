@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/davrodpin/ovsdbviz/graphviz"
-	"github.com/davrodpin/ovsdbviz/ovsdb"
+	"github.com/halfcrazy/ovsdbviz/graphviz"
+	"github.com/halfcrazy/ovsdbviz/ovsdb"
 	"os"
 	"strings"
 )
