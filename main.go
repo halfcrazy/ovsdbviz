@@ -83,8 +83,8 @@ func main() {
 		nodeAttrs := make(map[string]string)
 		nodeAttrs["shape"] = "none"
 		nodeAttrs["label"] = fmt.Sprintf(`<<table border="0" cellspacing="0">%s</table>>`, label)
-		graph.AddNode(tableName, nodeAttrs)
 
+		graph.AddNode(tableName, nodeAttrs)
 	}
 
 	// EDGES
@@ -97,9 +97,9 @@ func main() {
 
 				for refAttribute, reference := range references {
 					src := tableName
-					srcPort := fmt.Sprintf(":f%d", portIndex)
+					srcPort := fmt.Sprintf("f%d", portIndex)
 					dst := reference
-					dstPort := ":f0"
+					dstPort := "f0"
 
 					edgeAttrs := make(map[string]string)
 					edgeAttrs["label"] = refAttribute
