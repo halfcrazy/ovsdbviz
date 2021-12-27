@@ -4,7 +4,8 @@
 
 ```
 $ GOBIN=`pwd` go install github.com/halfcrazy/ovsdbviz@latest
-$ ./ovsdbviz -schema ./examplesvswitch.ovsschema -out ./ovsdb.dot
+$ ./ovsdbviz --schema ./examplesvswitch.ovsschema --out ./ovsdb1.dot
+$ ./ovsdbviz --db OVN_Northbound --address 192.168.1.1:6641 --out ./ovsdb2.dot
 $ yum install graphviz
 $ dot -Tpng ./ovsdb.dot -o ./ovsdb.png
 $ open ./ovsdb.png
