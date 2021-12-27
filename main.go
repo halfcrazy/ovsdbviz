@@ -1,10 +1,10 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/halfcrazy/ovsdbviz/graphviz"
 	"github.com/halfcrazy/ovsdbviz/ovsdb"
+	"github.com/jessevdk/go-flags"
 	"os"
 	"strings"
 )
@@ -49,24 +49,46 @@ func GetPortIndex(columns []string, column string) int {
 	return portIndex
 }
 
-var schemaPath schemaValue
-var outputPath outputValue
+type RPCOptions struct {
+	DBName  string `long:"db" description:"ovs db name"`
+	Address string `long:"address" description:"ovs db server address, eg 192.168.1.1:6641"`
+}
+
+type LocalOptions struct {
+	SchemaPath string `long:"schema" description:"ovs schema file path"`
+}
+
+type CliOptions struct {
+	Out   string       `long:"out" description:"dot output file path" required:"true"`
+	Local LocalOptions `group:"local"`
+	RPC   RPCOptions   `group:"rpc"`
+}
+
+var cliOptions CliOptions
+var parser = flags.NewParser(&cliOptions, flags.Default)
 
 func init() {
-	flag.Var(&schemaPath, "schema", "ovsdb schema file path")
-	flag.Var(&outputPath, "out", "graphviz dot output file path")
-	flag.Parse()
-
-	if schemaPath == "" || outputPath == "" {
-		fmt.Printf("usage:\n")
-		flag.PrintDefaults()
+	if _, err := parser.Parse(); err != nil {
+		fmt.Println(parser.Usage)
+		os.Exit(1)
+	}
+	if cliOptions.Local.SchemaPath != "" && (cliOptions.RPC.DBName != "" || cliOptions.RPC.Address != "") {
+		fmt.Println("cannot specify local and rpc in the same time")
+		os.Exit(1)
+	}
+	if cliOptions.Local.SchemaPath == "" && (cliOptions.RPC.DBName == "" || cliOptions.RPC.Address == "") {
+		fmt.Println("you must specify local or rpc")
 		os.Exit(1)
 	}
 }
 
 func main() {
 
-	schema, err := ovsdb.NewDatabaseSchema(schemaPath.String())
+	schema, err := ovsdb.NewDatabaseSchema(ovsdb.SchemaOption{
+		Address:    cliOptions.RPC.Address,
+		DB:         cliOptions.RPC.DBName,
+		SchemaPath: cliOptions.Local.SchemaPath,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -117,7 +139,7 @@ func main() {
 		}
 	}
 
-	output, err := os.Create(outputPath.String())
+	output, err := os.Create(cliOptions.Out)
 	if err != nil {
 		panic(err)
 	}
@@ -125,7 +147,7 @@ func main() {
 
 	_, err = output.WriteString(graph.String())
 	if err != nil {
-		panic(fmt.Sprintf("Error while writing output to %s: %v", outputPath.String(), err))
+		panic(fmt.Sprintf("Error while writing output to %s: %v", cliOptions.Out, err))
 	}
 
 }

@@ -2,7 +2,13 @@ package ovsdb
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"github.com/cenkalti/rpc2"
+	"github.com/cenkalti/rpc2/jsonrpc"
 	"io/ioutil"
+	"net"
+	"os"
 )
 
 type DatabaseSchema struct {
@@ -91,7 +97,20 @@ func (column ColumnSchema) RefersTo() map[string]string {
 	return references
 }
 
-func NewDatabaseSchema(schemaPath string) (*DatabaseSchema, error) {
+type SchemaOption struct {
+	Address    string
+	DB         string
+	SchemaPath string
+}
+
+func NewDatabaseSchema(opt SchemaOption) (*DatabaseSchema, error) {
+	if opt.SchemaPath != "" {
+		return getSchemaFromFile(opt.SchemaPath)
+	}
+	return getSchemaFromRpc(opt.Address, opt.DB)
+}
+
+func getSchemaFromFile(schemaPath string) (*DatabaseSchema, error) {
 	fp, err := ioutil.ReadFile(schemaPath)
 	if err != nil {
 		return nil, err
@@ -104,4 +123,65 @@ func NewDatabaseSchema(schemaPath string) (*DatabaseSchema, error) {
 	}
 
 	return &database, nil
+}
+
+var ErrNotConnected = errors.New("not connected")
+
+func newRPCClient(address string) (*rpc2.Client, error) {
+	conn, err := net.Dial("tcp", address)
+	if err != nil {
+		return nil, err
+	}
+	client := rpc2.NewClientWithCodec(jsonrpc.NewJSONCodec(conn))
+	client.SetBlocking(true)
+	go client.Run()
+	return client, nil
+}
+
+func getSchemaFromRpc(address, dbName string) (*DatabaseSchema, error) {
+	client, err := newRPCClient(address)
+	if err != nil {
+		return nil, err
+	}
+	defer client.Close()
+	dbs, err := listDbs(client)
+	if err != nil {
+		return nil, err
+	}
+	found := false
+	for _, db := range dbs {
+		if dbName == db {
+			found = true
+			break
+		}
+	}
+	if !found {
+		fmt.Printf("db %s not found, available dbs are %v\n", dbName, dbs)
+		os.Exit(1)
+	}
+	return getSchema(client, dbName)
+}
+
+func getSchema(client *rpc2.Client, dbName string) (*DatabaseSchema, error) {
+	args := []interface{}{dbName}
+	var reply DatabaseSchema
+	if err := client.Call("get_schema", args, &reply); err != nil {
+		if err == rpc2.ErrShutdown {
+			return nil, ErrNotConnected
+		}
+		return nil, err
+	}
+	return &reply, nil
+}
+
+func listDbs(client *rpc2.Client) ([]string, error) {
+	var dbs []string
+	err := client.Call("list_dbs", nil, &dbs)
+	if err != nil {
+		if err == rpc2.ErrShutdown {
+			return nil, ErrNotConnected
+		}
+		return nil, fmt.Errorf("listdbs failure - %v", err)
+	}
+	return dbs, err
 }
