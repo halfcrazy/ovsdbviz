@@ -8,7 +8,7 @@ github.com/awalterschulze/gographviz/internal/parser
 github.com/awalterschulze/gographviz/internal/token
 # github.com/cenkalti/hub v1.0.2
 github.com/cenkalti/hub
-# github.com/cenkalti/rpc2 v1.0.4
+# github.com/cenkalti/rpc2 v1.0.5
 ## explicit
 github.com/cenkalti/rpc2
 github.com/cenkalti/rpc2/jsonrpc
