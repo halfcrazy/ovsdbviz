@@ -25,7 +25,7 @@
   <select id="schema-select"></select>
   <label class="file-btn">加载 JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
   <label><input id="hide-mode" type="checkbox"> 隐藏无关</label>
-  <span class="hint">点击表名节点：高亮所有直接/间接关联；点击空白处：重置</span>
+  <span class="hint">节点列出含外链的字段；点击节点：高亮直接/间接关联并显示字段名；悬停边：显示字段名；点击空白：重置</span>
 </div>
 <div id="main">
   <div id="cy"></div>
@@ -48,13 +48,19 @@ const cy = cytoscape({
       'width': 'label', 'height': 'label', 'padding': '12px',
       'background-color': '#76d7c4', 'border-width': 1, 'border-color': '#45b39d',
       'font-size': 13, 'text-valign': 'center', 'text-halign': 'center',
+      'text-wrap': 'wrap', 'text-max-width': '240px',
     }},
     { selector: 'node[root]', style: { 'border-width': 3, 'border-color': '#b7791f' } },
     { selector: 'edge', style: {
       'width': 1.5, 'line-color': '#a0aec0', 'target-arrow-shape': 'triangle',
       'target-arrow-color': '#a0aec0', 'curve-style': 'bezier',
-      'label': 'data(label)', 'font-size': 10, 'color': '#718096',
+    }},
+    // 边标签默认隐藏，仅在悬停或节点聚焦时显示，白底避免与连线叠印
+    { selector: 'edge.show-label', style: {
+      'label': 'data(label)', 'font-size': 10, 'color': '#2d3748',
       'text-rotation': 'autorotate', 'text-margin-y': -6,
+      'text-background-color': '#ffffff', 'text-background-opacity': 0.9,
+      'text-background-padding': '1px',
     }},
     { selector: 'edge[kind="key"]',   style: { 'line-color': KIND_COLOR.key,   'target-arrow-color': KIND_COLOR.key } },
     { selector: 'edge[kind="value"]', style: { 'line-color': KIND_COLOR.value, 'target-arrow-color': KIND_COLOR.value, 'line-style': 'dashed' } },
@@ -95,7 +101,16 @@ function refreshSelect() {
 function render(schema) {
   cy.elements().remove();
   document.getElementById('info').style.display = 'none';
-  cy.add(schema.nodes.map(n => ({ data: { id: n.id, label: n.id, root: !!n.root, columns: n.columns } })));
+  // 节点标签 = 表名 + 含外链的列名（无关联字段不显示）
+  const refCols = {};
+  schema.edges.forEach(e => (refCols[e.source] ??= []).push(e.label));
+  cy.add(schema.nodes.map(n => {
+    const cols = [...new Set(refCols[n.id] || [])];
+    return { data: {
+      id: n.id, root: !!n.root, columns: n.columns,
+      label: cols.length ? n.id + '\n───\n' + cols.join('\n') : n.id,
+    }};
+  }));
   cy.add(schema.edges.map((e, i) => ({ data: {
     id: 'e' + i, source: e.source, target: e.target,
     label: e.label, kind: e.kind, weak: !!e.weak,
@@ -114,7 +129,7 @@ function showInfo(node) {
 }
 
 function clearFocus() {
-  cy.elements().removeClass('highlight dim hidden');
+  cy.elements().removeClass('highlight dim hidden focus-edge show-label');
   document.getElementById('info').style.display = 'none';
 }
 
@@ -123,11 +138,18 @@ cy.on('tap', 'node', e => {
   const keep = e.target.successors().union(e.target.predecessors()).union(e.target);
   clearFocus();
   e.target.addClass('highlight');
+  keep.edges().addClass('focus-edge show-label');
   cy.elements().difference(keep).addClass(
     document.getElementById('hide-mode').checked ? 'hidden' : 'dim');
   showInfo(e.target);
 });
 cy.on('tap', e => { if (e.target === cy) clearFocus(); });
+
+// 悬停边临时显示字段名，聚焦中的边保持常显
+cy.on('mouseover', 'edge', e => e.target.addClass('show-label'));
+cy.on('mouseout', 'edge', e => {
+  if (!e.target.hasClass('focus-edge')) e.target.removeClass('show-label');
+});
 
 select.onchange = () => render(SCHEMAS[select.value]);
 
