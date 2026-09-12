@@ -25,7 +25,7 @@
   <select id="schema-select"></select>
   <label class="file-btn">加载 JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
   <label><input id="show-all" type="checkbox"> 显示全部字段</label>
-  <span class="hint">点击节点：高亮直接/间接关联、弱化无关；点击空白：重置</span>
+  <span class="hint">点击节点：仅显示其直接/间接关联并重新布局；点击空白：还原</span>
 </div>
 <div id="main">
   <div id="cy"></div>
@@ -63,7 +63,7 @@ const cy = cytoscape({
     { selector: 'edge[kind="value"]', style: { 'line-color': KIND_COLOR.value, 'target-arrow-color': KIND_COLOR.value, 'line-style': 'dashed' } },
     { selector: 'edge[weak]',   style: { 'line-style': 'dotted' } },
     { selector: '.highlight', style: { 'border-width': 3, 'border-color': '#dd6b20' } },
-    { selector: '.dim',    style: { 'opacity': 0.12, 'events': 'no' } },
+    { selector: '.hidden', style: { 'display': 'none' } },
   ],
   layout: { name: 'elk', elk: {
     'algorithm': 'layered',
@@ -128,8 +128,9 @@ function rowPct(h, idx) {
 }
 
 function render(schema) {
+  restore();
   cy.elements().remove();
-  document.getElementById('info').style.display = 'none';
+  savedPos = null;
   // 节点 = 表名 + 含外链的列（record 行），无关联字段不显示
   const refCols = {};
   schema.edges.forEach(e => (refCols[e.source] ??= []).push(e.label));
@@ -155,7 +156,7 @@ function render(schema) {
       tep: '-50% ' + rowPct(dst.h, -1),
     }};
   }));
-  cy.layout({ name: 'elk', elk: cy.options().layout.elk }).run();
+  cy.layout(layoutOpts()).run();
 }
 
 function showInfo(node) {
@@ -168,20 +169,43 @@ function showInfo(node) {
   info.style.display = 'block';
 }
 
-function clearFocus() {
-  cy.elements().removeClass('highlight dim');
+// 聚焦时仅对闭包子图重新布局；还原时恢复缓存的全局布局，避免跳变。
+// 不能开 animate：layoutstop 在动画开始时触发，会缓存到动画前的旧坐标
+let savedPos = null, focusing = false, focusEles = null;
+const layoutOpts = () => ({ name: 'elk', elk: cy.options().layout.elk });
+
+cy.on('layoutstop', () => {
+  if (focusing && focusEles) cy.fit(focusEles, 40);
+  else savePositions();
+});
+function savePositions() {
+  savedPos = {};
+  cy.nodes().forEach(n => savedPos[n.id()] = { ...n.position() });
+}
+
+function restore() {
+  focusing = false;
+  focusEles = null;
+  cy.elements().removeClass('highlight hidden');
+  if (savedPos) {
+    cy.nodes().positions(n => savedPos[n.id()]);
+    cy.fit(null, 40);
+  }
   document.getElementById('info').style.display = 'none';
 }
 
 // successors/predecessors 为递归（传递闭包）语义
 cy.on('tap', 'node', e => {
+  restore();
   const keep = e.target.successors().union(e.target.predecessors()).union(e.target);
-  clearFocus();
+  focusing = true;
+  focusEles = keep;
   e.target.addClass('highlight');
-  cy.elements().difference(keep).addClass('dim');
+  cy.elements().difference(keep).addClass('hidden');
+  keep.layout(layoutOpts()).run();
   showInfo(e.target);
 });
-cy.on('tap', e => { if (e.target === cy) clearFocus(); });
+cy.on('tap', e => { if (e.target === cy) restore(); });
 
 select.onchange = () => render(SCHEMAS[select.value]);
 document.getElementById('show-all').onchange = () => render(SCHEMAS[select.value]);
