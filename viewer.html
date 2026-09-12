@@ -24,9 +24,8 @@
 <div id="bar">
   <select id="schema-select"></select>
   <label class="file-btn">加载 JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
-  <label><input id="hide-mode" type="checkbox"> 隐藏无关</label>
   <label><input id="show-all" type="checkbox"> 显示全部字段</label>
-  <span class="hint">点击节点：高亮直接/间接关联；点击空白：重置</span>
+  <span class="hint">点击节点：高亮直接/间接关联、弱化无关；点击空白：重置</span>
 </div>
 <div id="main">
   <div id="cy"></div>
@@ -65,7 +64,6 @@ const cy = cytoscape({
     { selector: 'edge[weak]',   style: { 'line-style': 'dotted' } },
     { selector: '.highlight', style: { 'border-width': 3, 'border-color': '#dd6b20' } },
     { selector: '.dim',    style: { 'opacity': 0.12, 'events': 'no' } },
-    { selector: '.hidden', style: { 'display': 'none' } },
   ],
   layout: { name: 'elk', elk: {
     'algorithm': 'layered',
@@ -171,7 +169,7 @@ function showInfo(node) {
 }
 
 function clearFocus() {
-  cy.elements().removeClass('highlight dim hidden');
+  cy.elements().removeClass('highlight dim');
   document.getElementById('info').style.display = 'none';
 }
 
@@ -180,8 +178,7 @@ cy.on('tap', 'node', e => {
   const keep = e.target.successors().union(e.target.predecessors()).union(e.target);
   clearFocus();
   e.target.addClass('highlight');
-  cy.elements().difference(keep).addClass(
-    document.getElementById('hide-mode').checked ? 'hidden' : 'dim');
+  cy.elements().difference(keep).addClass('dim');
   showInfo(e.target);
 });
 cy.on('tap', e => { if (e.target === cy) clearFocus(); });
