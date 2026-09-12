@@ -1,10 +1,11 @@
 {
     "name": "OVN_IC_Southbound",
-    "version": "1.0.0",
-    "cksum": "108951192 6585",
+    "version": "2.7.0",
+    "cksum": "4014616205 10519",
     "tables": {
         "IC_SB_Global": {
             "columns": {
+                "nb_ic_cfg": {"type": {"key": "integer"}},
                 "external_ids": {
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}},
@@ -24,7 +25,8 @@
             "isRoot": true},
         "Availability_Zone": {
             "columns": {
-                "name": {"type": "string"}},
+                "name": {"type": "string"},
+                "nb_ic_cfg": {"type": {"key": "integer"}}},
             "isRoot": true,
             "indexes": [["name"]]},
         "Gateway": {
@@ -45,7 +47,7 @@
             "columns": {
                 "type": {"type": {"key": {
                            "type": "string",
-                           "enum": ["set", ["geneve", "stt", "vxlan"]]}}},
+                           "enum": ["set", ["geneve", "vxlan"]]}}},
                 "options": {"type": {"key": "string",
                                      "value": "string",
                                      "min": 0,
@@ -56,6 +58,14 @@
         "Datapath_Binding": {
             "columns": {
                 "transit_switch": {"type": "string"},
+                "type": {"type": {"key": {"type": "string",
+                                          "enum": ["set",
+                                                      ["transit-switch",
+                                                       "transit-router"]]},
+                                                        "min": 0, "max": 1}},
+                "nb_ic_uuid": {"type": {"key": {"type": "uuid"},
+                                     "min": 0,
+                                     "max": 1}},
                 "tunnel_key": {
                      "type": {"key": {"type": "integer",
                                       "minInteger": 1,
@@ -63,7 +73,7 @@
                 "external_ids": {
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}}},
-            "indexes": [["tunnel_key"]],
+            "indexes": [["nb_ic_uuid", "tunnel_key"]],
             "isRoot": true},
         "Port_Binding": {
             "columns": {
@@ -81,6 +91,14 @@
                                              "refType": "weak"},
                                     "min": 0, "max": 1}},
                 "address": {"type": "string"},
+                "type": {"type": {"key": {"type": "string",
+                                          "enum": ["set",
+                                                  ["transit-switch-port",
+                                                   "transit-router-port"]]},
+                                                   "min": 0, "max": 1}},
+                "nb_ic_uuid": {"type": {"key": {"type": "uuid"},
+                                     "min": 0,
+                                     "max": 1}},
                 "external_ids": {"type": {"key": "string",
                                  "value": "string",
                                  "min": 0,
@@ -92,11 +110,22 @@
                 "transit_switch": {"type": "string"},
                 "availability_zone": {"type": {"key": {"type": "uuid",
                                       "refTable": "Availability_Zone"}}},
+                "route_table": {"type": "string"},
                 "ip_prefix": {"type": "string"},
                 "nexthop": {"type": "string"},
+                "origin": {"type": {"key": {
+                    "type": "string",
+                    "enum": ["set",
+                             ["connected", "static", "loadbalancer",
+                              "connected-dynamic"]]}}},
+                "options": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}},
                 "external_ids": {
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}}},
+            "indexes": [["transit_switch", "availability_zone", "route_table",
+                         "ip_prefix", "nexthop"]],
             "isRoot": true},
         "Connection": {
             "columns": {
@@ -131,10 +160,54 @@
                 "bootstrap_ca_cert": {"type": "boolean"},
                 "ssl_protocols": {"type": "string"},
                 "ssl_ciphers": {"type": "string"},
+                "ssl_ciphersuites": {"type": "string"},
                 "external_ids": {"type": {"key": "string",
                                           "value": "string",
                                           "min": 0,
                                           "max": "unlimited"}}},
-            "maxRows": 1}
+            "maxRows": 1},
+        "Service_Monitor": {
+            "columns": {
+                "type": {"type": {"key": {
+                           "type": "string",
+                           "enum": ["set", ["load-balancer"]]},
+                           "min": 0, "max": 1}},
+                "ip": {"type": "string"},
+                "protocol": {
+                    "type": {"key": {"type": "string",
+                             "enum": ["set", ["tcp", "udp"]]},
+                             "min": 0, "max": 1}},
+                "port": {"type": {"key": {"type": "integer",
+                                          "minInteger": 0,
+                                          "maxInteger": 65535}}},
+                "logical_port": {"type": "string"},
+                "src_ip": {"type": "string"},
+                "src_mac": {"type": "string"},
+                "status": {
+                    "type": {"key": {"type": "string",
+                             "enum": ["set", ["online", "offline", "error"]]},
+                             "min": 0, "max": 1}},
+                "target_availability_zone": {"type": "string"},
+                "source_availability_zone": {"type": "string"},
+                "options": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": true},
+        "Address_Set": {
+            "columns": {
+                "name": {"type": "string"},
+                "addresses": {"type": {"key": "string",
+                                       "min": 0,
+                                       "max": "unlimited"}},
+                "availability_zone": {"type": {"key": {"type": "uuid",
+                                      "refTable": "Availability_Zone"}}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "indexes": [["name", "availability_zone"]],
+            "isRoot": true}
     }
 }

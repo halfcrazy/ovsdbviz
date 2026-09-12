@@ -1,0 +1,367 @@
+{
+  "name": "OVN_IC_Northbound",
+  "version": "1.4.0",
+  "nodes": [
+    {
+      "id": "Connection",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "inactivity_probe",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "is_connected",
+          "type": "boolean"
+        },
+        {
+          "name": "max_backoff",
+          "type": {
+            "key": {
+              "minInteger": 1000,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "IC_NB_Global",
+      "root": true,
+      "columns": [
+        {
+          "name": "connections",
+          "type": {
+            "key": {
+              "refTable": "Connection",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "nb_ic_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "sb_ic_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "ssl",
+          "type": {
+            "key": {
+              "refTable": "SSL",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "SSL",
+      "columns": [
+        {
+          "name": "bootstrap_ca_cert",
+          "type": "boolean"
+        },
+        {
+          "name": "ca_cert",
+          "type": "string"
+        },
+        {
+          "name": "certificate",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "private_key",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphers",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphersuites",
+          "type": "string"
+        },
+        {
+          "name": "ssl_protocols",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Transit_Router",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Transit_Router_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Transit_Router_Port",
+      "columns": [
+        {
+          "name": "chassis",
+          "type": "string"
+        },
+        {
+          "name": "mac",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "networks",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "tr_uuid",
+          "type": {
+            "key": {
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Transit_Switch",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Transit_Switch_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Transit_Switch_Port",
+      "columns": [
+        {
+          "name": "addresses",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "chassis",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "peer",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "IC_NB_Global",
+      "target": "Connection",
+      "label": "connections",
+      "kind": "key"
+    },
+    {
+      "source": "IC_NB_Global",
+      "target": "SSL",
+      "label": "ssl",
+      "kind": "key"
+    },
+    {
+      "source": "Transit_Router",
+      "target": "Transit_Router_Port",
+      "label": "ports",
+      "kind": "key"
+    },
+    {
+      "source": "Transit_Switch",
+      "target": "Transit_Switch_Port",
+      "label": "ports",
+      "kind": "key"
+    }
+  ]
+}

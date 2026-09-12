@@ -1,0 +1,1009 @@
+{
+  "name": "hardware_vtep",
+  "version": "1.7.0",
+  "nodes": [
+    {
+      "id": "ACL",
+      "root": true,
+      "columns": [
+        {
+          "name": "acl_entries",
+          "type": {
+            "key": {
+              "refTable": "ACL_entry",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 1
+          }
+        },
+        {
+          "name": "acl_fault_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "acl_name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "ACL_entry",
+      "root": true,
+      "columns": [
+        {
+          "name": "acle_fault_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "permit",
+                  "deny"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "dest_ip",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dest_mac",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dest_mask",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dest_port_max",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dest_port_min",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "direction",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "ingress",
+                  "egress"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "ethertype",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "icmp_code",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "icmp_type",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "protocol",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "sequence",
+          "type": "integer"
+        },
+        {
+          "name": "source_ip",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "source_mac",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "source_mask",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "source_port_max",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "source_port_min",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "tcp_flags",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "tcp_flags_mask",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Arp_Sources_Local",
+      "root": true,
+      "columns": [
+        {
+          "name": "locator",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "src_mac",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Arp_Sources_Remote",
+      "root": true,
+      "columns": [
+        {
+          "name": "locator",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "src_mac",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Global",
+      "root": true,
+      "columns": [
+        {
+          "name": "managers",
+          "type": {
+            "key": {
+              "refTable": "Manager",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "switches",
+          "type": {
+            "key": {
+              "refTable": "Physical_Switch",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Binding_Stats",
+      "columns": [
+        {
+          "name": "bytes_from_local",
+          "type": "integer"
+        },
+        {
+          "name": "bytes_to_local",
+          "type": "integer"
+        },
+        {
+          "name": "packets_from_local",
+          "type": "integer"
+        },
+        {
+          "name": "packets_to_local",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "id": "Logical_Router",
+      "root": true,
+      "columns": [
+        {
+          "name": "LR_fault_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "acl_binding",
+          "type": {
+            "key": {
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "refTable": "ACL",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "static_routes",
+          "type": {
+            "key": {
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "switch_binding",
+          "type": {
+            "key": {
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Switch",
+      "root": true,
+      "columns": [
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "replication_mode",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "service_node",
+                  "source_node"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "tunnel_key",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Manager",
+      "columns": [
+        {
+          "name": "inactivity_probe",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "is_connected",
+          "type": "boolean"
+        },
+        {
+          "name": "max_backoff",
+          "type": {
+            "key": {
+              "minInteger": 1000,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Mcast_Macs_Local",
+      "root": true,
+      "columns": [
+        {
+          "name": "MAC",
+          "type": "string"
+        },
+        {
+          "name": "ipaddr",
+          "type": "string"
+        },
+        {
+          "name": "locator_set",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator_Set",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "logical_switch",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Mcast_Macs_Remote",
+      "root": true,
+      "columns": [
+        {
+          "name": "MAC",
+          "type": "string"
+        },
+        {
+          "name": "ipaddr",
+          "type": "string"
+        },
+        {
+          "name": "locator_set",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator_Set",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "logical_switch",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Physical_Locator",
+      "columns": [
+        {
+          "name": "dst_ip",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "encapsulation_type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "vxlan_over_ipv4"
+                ]
+              ],
+              "type": "string"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "tunnel_key",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          },
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Physical_Locator_Set",
+      "columns": [
+        {
+          "name": "locators",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Physical_Port",
+      "columns": [
+        {
+          "name": "acl_bindings",
+          "type": {
+            "key": {
+              "maxInteger": 4095,
+              "minInteger": 0,
+              "type": "integer"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "refTable": "ACL",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "port_fault_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "vlan_bindings",
+          "type": {
+            "key": {
+              "maxInteger": 4095,
+              "minInteger": 0,
+              "type": "integer"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "vlan_stats",
+          "type": {
+            "key": {
+              "maxInteger": 4095,
+              "minInteger": 0,
+              "type": "integer"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "refTable": "Logical_Binding_Stats",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Physical_Switch",
+      "columns": [
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "management_ips",
+          "type": {
+            "key": {
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Physical_Port",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "switch_fault_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "tunnel_ips",
+          "type": {
+            "key": {
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "tunnels",
+          "type": {
+            "key": {
+              "refTable": "Tunnel",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Tunnel",
+      "columns": [
+        {
+          "name": "bfd_config_local",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "bfd_config_remote",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "bfd_params",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "bfd_status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "local",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "remote",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Ucast_Macs_Local",
+      "root": true,
+      "columns": [
+        {
+          "name": "MAC",
+          "type": "string"
+        },
+        {
+          "name": "ipaddr",
+          "type": "string"
+        },
+        {
+          "name": "locator",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "logical_switch",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Ucast_Macs_Remote",
+      "root": true,
+      "columns": [
+        {
+          "name": "MAC",
+          "type": "string"
+        },
+        {
+          "name": "ipaddr",
+          "type": "string"
+        },
+        {
+          "name": "locator",
+          "type": {
+            "key": {
+              "refTable": "Physical_Locator",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "logical_switch",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch",
+              "type": "uuid"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "ACL",
+      "target": "ACL_entry",
+      "label": "acl_entries",
+      "kind": "key"
+    },
+    {
+      "source": "Arp_Sources_Local",
+      "target": "Physical_Locator",
+      "label": "locator",
+      "kind": "key"
+    },
+    {
+      "source": "Arp_Sources_Remote",
+      "target": "Physical_Locator",
+      "label": "locator",
+      "kind": "key"
+    },
+    {
+      "source": "Global",
+      "target": "Manager",
+      "label": "managers",
+      "kind": "key"
+    },
+    {
+      "source": "Global",
+      "target": "Physical_Switch",
+      "label": "switches",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "ACL",
+      "label": "acl_binding",
+      "kind": "value"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Logical_Switch",
+      "label": "switch_binding",
+      "kind": "value"
+    },
+    {
+      "source": "Mcast_Macs_Local",
+      "target": "Physical_Locator_Set",
+      "label": "locator_set",
+      "kind": "key"
+    },
+    {
+      "source": "Mcast_Macs_Local",
+      "target": "Logical_Switch",
+      "label": "logical_switch",
+      "kind": "key"
+    },
+    {
+      "source": "Mcast_Macs_Remote",
+      "target": "Physical_Locator_Set",
+      "label": "locator_set",
+      "kind": "key"
+    },
+    {
+      "source": "Mcast_Macs_Remote",
+      "target": "Logical_Switch",
+      "label": "logical_switch",
+      "kind": "key"
+    },
+    {
+      "source": "Physical_Locator_Set",
+      "target": "Physical_Locator",
+      "label": "locators",
+      "kind": "key"
+    },
+    {
+      "source": "Physical_Port",
+      "target": "ACL",
+      "label": "acl_bindings",
+      "kind": "value"
+    },
+    {
+      "source": "Physical_Port",
+      "target": "Logical_Switch",
+      "label": "vlan_bindings",
+      "kind": "value"
+    },
+    {
+      "source": "Physical_Port",
+      "target": "Logical_Binding_Stats",
+      "label": "vlan_stats",
+      "kind": "value"
+    },
+    {
+      "source": "Physical_Switch",
+      "target": "Physical_Port",
+      "label": "ports",
+      "kind": "key"
+    },
+    {
+      "source": "Physical_Switch",
+      "target": "Tunnel",
+      "label": "tunnels",
+      "kind": "key"
+    },
+    {
+      "source": "Tunnel",
+      "target": "Physical_Locator",
+      "label": "local",
+      "kind": "key"
+    },
+    {
+      "source": "Tunnel",
+      "target": "Physical_Locator",
+      "label": "remote",
+      "kind": "key"
+    },
+    {
+      "source": "Ucast_Macs_Local",
+      "target": "Physical_Locator",
+      "label": "locator",
+      "kind": "key"
+    },
+    {
+      "source": "Ucast_Macs_Local",
+      "target": "Logical_Switch",
+      "label": "logical_switch",
+      "kind": "key"
+    },
+    {
+      "source": "Ucast_Macs_Remote",
+      "target": "Physical_Locator",
+      "label": "locator",
+      "kind": "key"
+    },
+    {
+      "source": "Ucast_Macs_Remote",
+      "target": "Logical_Switch",
+      "label": "logical_switch",
+      "kind": "key"
+    }
+  ]
+}

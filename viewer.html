@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>ovsdbviz</title>
@@ -23,9 +23,9 @@
 <body>
 <div id="bar">
   <select id="schema-select"></select>
-  <label class="file-btn">加载 JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
-  <label><input id="show-all" type="checkbox"> 显示全部字段</label>
-  <span class="hint">点击节点：仅显示其直接/间接关联并重新布局；点击空白：还原</span>
+  <label class="file-btn">Load JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
+  <label><input id="show-all" type="checkbox"> Show all columns</label>
+  <span class="hint">Click a table: keep only its direct &amp; transitive relations and re-layout. Click blank space: restore.</span>
 </div>
 <div id="main">
   <div id="cy"></div>

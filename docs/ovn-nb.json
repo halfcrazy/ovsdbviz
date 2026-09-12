@@ -1,0 +1,2822 @@
+{
+  "name": "OVN_Northbound",
+  "version": "7.19.0",
+  "nodes": [
+    {
+      "id": "ACL",
+      "columns": [
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "allow",
+                  "allow-related",
+                  "allow-stateless",
+                  "drop",
+                  "reject",
+                  "pass"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "direction",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "from-lport",
+                  "to-lport"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "label",
+          "type": {
+            "key": {
+              "maxInteger": 4294967295,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "log",
+          "type": "boolean"
+        },
+        {
+          "name": "match",
+          "type": "string"
+        },
+        {
+          "name": "meter",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "key": {
+              "maxLength": 63,
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "network_function_group",
+          "type": {
+            "key": {
+              "refTable": "Network_Function_Group",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "sample_est",
+          "type": {
+            "key": {
+              "refTable": "Sample",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "sample_new",
+          "type": {
+            "key": {
+              "refTable": "Sample",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "severity",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "alert",
+                  "warning",
+                  "notice",
+                  "info",
+                  "debug"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "tier",
+          "type": {
+            "key": {
+              "maxInteger": 3,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Address_Set",
+      "root": true,
+      "columns": [
+        {
+          "name": "addresses",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BFD",
+      "root": true,
+      "columns": [
+        {
+          "name": "detect_mult",
+          "type": {
+            "key": {
+              "minInteger": 1,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dst_ip",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "logical_port",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "min_rx",
+          "type": {
+            "key": {
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "min_tx",
+          "type": {
+            "key": {
+              "minInteger": 1,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "down",
+                  "init",
+                  "up",
+                  "admin_down"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Chassis_Template_Var",
+      "root": true,
+      "columns": [
+        {
+          "name": "chassis",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "variables",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Connection",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "inactivity_probe",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "is_connected",
+          "type": "boolean"
+        },
+        {
+          "name": "max_backoff",
+          "type": {
+            "key": {
+              "minInteger": 1000,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Copp",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "meters",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "DHCP_Options",
+      "root": true,
+      "columns": [
+        {
+          "name": "cidr",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "DHCP_Relay",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "servers",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "DNS",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "records",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Forwarding_Group",
+      "columns": [
+        {
+          "name": "child_port",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 1
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "liveness",
+          "type": "boolean"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "vip",
+          "type": "string"
+        },
+        {
+          "name": "vmac",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Gateway_Chassis",
+      "columns": [
+        {
+          "name": "chassis_name",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "HA_Chassis",
+      "columns": [
+        {
+          "name": "chassis_name",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "HA_Chassis_Group",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ha_chassis",
+          "type": {
+            "key": {
+              "refTable": "HA_Chassis",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Load_Balancer",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "health_check",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer_Health_Check",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "ip_port_mappings",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "protocol",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "tcp",
+                  "udp",
+                  "sctp"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "selection_fields",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "eth_src",
+                  "eth_dst",
+                  "ip_src",
+                  "ip_dst",
+                  "ipv6_src",
+                  "ipv6_dst",
+                  "tp_src",
+                  "tp_dst"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "vips",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Load_Balancer_Group",
+      "root": true,
+      "columns": [
+        {
+          "name": "load_balancer",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Load_Balancer_Health_Check",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "vip",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Logical_Router",
+      "root": true,
+      "columns": [
+        {
+          "name": "copp",
+          "type": {
+            "key": {
+              "refTable": "Copp",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "enabled",
+          "type": {
+            "key": "boolean",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "load_balancer",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "load_balancer_group",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer_Group",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "nat",
+          "type": {
+            "key": {
+              "refTable": "NAT",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "policies",
+          "type": {
+            "key": {
+              "refTable": "Logical_Router_Policy",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Logical_Router_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "static_routes",
+          "type": {
+            "key": {
+              "refTable": "Logical_Router_Static_Route",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Router_Policy",
+      "columns": [
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "allow",
+                  "drop",
+                  "reroute",
+                  "jump"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "bfd_sessions",
+          "type": {
+            "key": {
+              "refTable": "BFD",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "chain",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "jump_chain",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "match",
+          "type": "string"
+        },
+        {
+          "name": "nexthop",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "nexthops",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "output_port",
+          "type": {
+            "key": {
+              "refTable": "Logical_Router_Port",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Router_Port",
+      "columns": [
+        {
+          "name": "dhcp_relay",
+          "type": {
+            "key": {
+              "refTable": "DHCP_Relay",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "enabled",
+          "type": {
+            "key": "boolean",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "gateway_chassis",
+          "type": {
+            "key": {
+              "refTable": "Gateway_Chassis",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "ha_chassis_group",
+          "type": {
+            "key": {
+              "refTable": "HA_Chassis_Group",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "ipv6_prefix",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "ipv6_ra_configs",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "mac",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "networks",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "peer",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Router_Static_Route",
+      "columns": [
+        {
+          "name": "bfd",
+          "type": {
+            "key": {
+              "refTable": "BFD",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ip_prefix",
+          "type": "string"
+        },
+        {
+          "name": "nexthop",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "output_port",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "policy",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "src-ip",
+                  "dst-ip"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "route_table",
+          "type": "string"
+        },
+        {
+          "name": "selection_fields",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "eth_src",
+                  "eth_dst",
+                  "ip_proto",
+                  "ip_src",
+                  "ip_dst",
+                  "ipv6_src",
+                  "ipv6_dst",
+                  "tp_src",
+                  "tp_dst"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Switch",
+      "root": true,
+      "columns": [
+        {
+          "name": "acls",
+          "type": {
+            "key": {
+              "refTable": "ACL",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "copp",
+          "type": {
+            "key": {
+              "refTable": "Copp",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dns_records",
+          "type": {
+            "key": {
+              "refTable": "DNS",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "forwarding_groups",
+          "type": {
+            "key": {
+              "refTable": "Forwarding_Group",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "load_balancer",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "load_balancer_group",
+          "type": {
+            "key": {
+              "refTable": "Load_Balancer_Group",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "qos_rules",
+          "type": {
+            "key": {
+              "refTable": "QoS",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Switch_Port",
+      "columns": [
+        {
+          "name": "addresses",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "dhcpv4_options",
+          "type": {
+            "key": {
+              "refTable": "DHCP_Options",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dhcpv6_options",
+          "type": {
+            "key": {
+              "refTable": "DHCP_Options",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "dynamic_addresses",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "enabled",
+          "type": {
+            "key": "boolean",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ha_chassis_group",
+          "type": {
+            "key": {
+              "refTable": "HA_Chassis_Group",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "health_checks",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch_Port_Health_Check",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "mirror_rules",
+          "type": {
+            "key": {
+              "refTable": "Mirror",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "parent_name",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "peer",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "port_security",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "tag",
+          "type": {
+            "key": {
+              "maxInteger": 4095,
+              "minInteger": 1,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "tag_request",
+          "type": {
+            "key": {
+              "maxInteger": 4095,
+              "minInteger": 0,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "up",
+          "type": {
+            "key": "boolean",
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Logical_Switch_Port_Health_Check",
+      "columns": [
+        {
+          "name": "address",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "port",
+          "type": {
+            "key": {
+              "maxInteger": 65535,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "protocol",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "tcp",
+                  "udp",
+                  "icmp"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "src_ip",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "online",
+                  "offline",
+                  "error"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Meter",
+      "root": true,
+      "columns": [
+        {
+          "name": "bands",
+          "type": {
+            "key": {
+              "refTable": "Meter_Band",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 1
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "fair",
+          "type": {
+            "key": "boolean",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "unit",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "kbps",
+                  "pktps"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Meter_Band",
+      "columns": [
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "drop"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "burst_size",
+          "type": {
+            "key": {
+              "maxInteger": 4294967295,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "rate",
+          "type": {
+            "key": {
+              "maxInteger": 4294967295,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Mirror",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "filter",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "from-lport",
+                  "to-lport",
+                  "both"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "index",
+          "type": "integer"
+        },
+        {
+          "name": "mirror_rules",
+          "type": {
+            "key": {
+              "refTable": "Mirror_Rule",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "sink",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "gre",
+                  "erspan",
+                  "local",
+                  "lport"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Mirror_Rule",
+      "columns": [
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "mirror",
+                  "skip"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "match",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NAT",
+      "columns": [
+        {
+          "name": "allowed_ext_ips",
+          "type": {
+            "key": {
+              "refTable": "Address_Set",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "exempted_ext_ips",
+          "type": {
+            "key": {
+              "refTable": "Address_Set",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "external_ip",
+          "type": "string"
+        },
+        {
+          "name": "external_mac",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_port_range",
+          "type": "string"
+        },
+        {
+          "name": "gateway_port",
+          "type": {
+            "key": {
+              "refTable": "Logical_Router_Port",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "logical_ip",
+          "type": "string"
+        },
+        {
+          "name": "logical_port",
+          "type": {
+            "key": "string",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "match",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "dnat",
+                  "snat",
+                  "dnat_and_snat"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NB_Global",
+      "root": true,
+      "columns": [
+        {
+          "name": "connections",
+          "type": {
+            "key": {
+              "refTable": "Connection",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "hv_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "hv_cfg_timestamp",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "ipsec",
+          "type": "boolean"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "nb_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "nb_cfg_timestamp",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "sb_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "sb_cfg_timestamp",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "ssl",
+          "type": {
+            "key": {
+              "refTable": "SSL",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Network_Function",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "health_check",
+          "type": {
+            "key": {
+              "refTable": "Network_Function_Health_Check",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "id",
+          "type": {
+            "key": {
+              "maxInteger": 255,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "inport",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 1
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "outport",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch_Port",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Network_Function_Group",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "fallback",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "fail-open",
+                  "fail-close"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "id",
+          "type": {
+            "key": {
+              "maxInteger": 255,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "mode",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "inline",
+                  "vtap"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "network_function",
+          "type": {
+            "key": {
+              "refTable": "Network_Function",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "network_function_active",
+          "type": {
+            "key": {
+              "refTable": "Network_Function",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Network_Function_Health_Check",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Port_Group",
+      "root": true,
+      "columns": [
+        {
+          "name": "acls",
+          "type": {
+            "key": {
+              "refTable": "ACL",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "ports",
+          "type": {
+            "key": {
+              "refTable": "Logical_Switch_Port",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "QoS",
+      "columns": [
+        {
+          "name": "action",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "dscp",
+                  "mark"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "maxInteger": 4294967295,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "bandwidth",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "rate",
+                  "burst"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": "unlimited",
+            "min": 0,
+            "value": {
+              "maxInteger": 4294967295,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "direction",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "from-lport",
+                  "to-lport"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "match",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "SSL",
+      "columns": [
+        {
+          "name": "bootstrap_ca_cert",
+          "type": "boolean"
+        },
+        {
+          "name": "ca_cert",
+          "type": "string"
+        },
+        {
+          "name": "certificate",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "private_key",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphers",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphersuites",
+          "type": "string"
+        },
+        {
+          "name": "ssl_protocols",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Sample",
+      "columns": [
+        {
+          "name": "collectors",
+          "type": {
+            "key": {
+              "refTable": "Sample_Collector",
+              "refType": "strong",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "metadata",
+          "type": {
+            "key": {
+              "maxInteger": 4294967295,
+              "minInteger": 1,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 1
+          },
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Sample_Collector",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "id",
+          "type": {
+            "key": {
+              "maxInteger": 255,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "probability",
+          "type": {
+            "key": {
+              "maxInteger": 65535,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "set_id",
+          "type": {
+            "key": {
+              "maxInteger": 4294967295,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Sampling_App",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "id",
+          "type": {
+            "key": {
+              "maxInteger": 255,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "drop",
+                  "acl-new",
+                  "acl-est"
+                ]
+              ],
+              "type": "string"
+            }
+          },
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Static_MAC_Binding",
+      "root": true,
+      "columns": [
+        {
+          "name": "ip",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "logical_port",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "mac",
+          "type": "string"
+        },
+        {
+          "name": "override_dynamic_mac",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "ACL",
+      "target": "Network_Function_Group",
+      "label": "network_function_group",
+      "kind": "key"
+    },
+    {
+      "source": "ACL",
+      "target": "Sample",
+      "label": "sample_est",
+      "kind": "key"
+    },
+    {
+      "source": "ACL",
+      "target": "Sample",
+      "label": "sample_new",
+      "kind": "key"
+    },
+    {
+      "source": "HA_Chassis_Group",
+      "target": "HA_Chassis",
+      "label": "ha_chassis",
+      "kind": "key"
+    },
+    {
+      "source": "Load_Balancer",
+      "target": "Load_Balancer_Health_Check",
+      "label": "health_check",
+      "kind": "key"
+    },
+    {
+      "source": "Load_Balancer_Group",
+      "target": "Load_Balancer",
+      "label": "load_balancer",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Copp",
+      "label": "copp",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Load_Balancer",
+      "label": "load_balancer",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Load_Balancer_Group",
+      "label": "load_balancer_group",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "NAT",
+      "label": "nat",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Logical_Router_Policy",
+      "label": "policies",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Logical_Router_Port",
+      "label": "ports",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router",
+      "target": "Logical_Router_Static_Route",
+      "label": "static_routes",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router_Policy",
+      "target": "BFD",
+      "label": "bfd_sessions",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Router_Policy",
+      "target": "Logical_Router_Port",
+      "label": "output_port",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Router_Port",
+      "target": "DHCP_Relay",
+      "label": "dhcp_relay",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router_Port",
+      "target": "Gateway_Chassis",
+      "label": "gateway_chassis",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router_Port",
+      "target": "HA_Chassis_Group",
+      "label": "ha_chassis_group",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Router_Static_Route",
+      "target": "BFD",
+      "label": "bfd",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "ACL",
+      "label": "acls",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "Copp",
+      "label": "copp",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "DNS",
+      "label": "dns_records",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "Forwarding_Group",
+      "label": "forwarding_groups",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "Load_Balancer",
+      "label": "load_balancer",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "Load_Balancer_Group",
+      "label": "load_balancer_group",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "Logical_Switch_Port",
+      "label": "ports",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch",
+      "target": "QoS",
+      "label": "qos_rules",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch_Port",
+      "target": "DHCP_Options",
+      "label": "dhcpv4_options",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch_Port",
+      "target": "DHCP_Options",
+      "label": "dhcpv6_options",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Logical_Switch_Port",
+      "target": "HA_Chassis_Group",
+      "label": "ha_chassis_group",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch_Port",
+      "target": "Logical_Switch_Port_Health_Check",
+      "label": "health_checks",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Switch_Port",
+      "target": "Mirror",
+      "label": "mirror_rules",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Meter",
+      "target": "Meter_Band",
+      "label": "bands",
+      "kind": "key"
+    },
+    {
+      "source": "Mirror",
+      "target": "Mirror_Rule",
+      "label": "mirror_rules",
+      "kind": "key"
+    },
+    {
+      "source": "NAT",
+      "target": "Address_Set",
+      "label": "allowed_ext_ips",
+      "kind": "key"
+    },
+    {
+      "source": "NAT",
+      "target": "Address_Set",
+      "label": "exempted_ext_ips",
+      "kind": "key"
+    },
+    {
+      "source": "NAT",
+      "target": "Logical_Router_Port",
+      "label": "gateway_port",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "NB_Global",
+      "target": "Connection",
+      "label": "connections",
+      "kind": "key"
+    },
+    {
+      "source": "NB_Global",
+      "target": "SSL",
+      "label": "ssl",
+      "kind": "key"
+    },
+    {
+      "source": "Network_Function",
+      "target": "Network_Function_Health_Check",
+      "label": "health_check",
+      "kind": "key"
+    },
+    {
+      "source": "Network_Function",
+      "target": "Logical_Switch_Port",
+      "label": "inport",
+      "kind": "key"
+    },
+    {
+      "source": "Network_Function",
+      "target": "Logical_Switch_Port",
+      "label": "outport",
+      "kind": "key"
+    },
+    {
+      "source": "Network_Function_Group",
+      "target": "Network_Function",
+      "label": "network_function",
+      "kind": "key"
+    },
+    {
+      "source": "Network_Function_Group",
+      "target": "Network_Function",
+      "label": "network_function_active",
+      "kind": "key"
+    },
+    {
+      "source": "Port_Group",
+      "target": "ACL",
+      "label": "acls",
+      "kind": "key"
+    },
+    {
+      "source": "Port_Group",
+      "target": "Logical_Switch_Port",
+      "label": "ports",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Sample",
+      "target": "Sample_Collector",
+      "label": "collectors",
+      "kind": "key"
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "name": "OVN_Bridge_Controller",
+  "version": "0.0.1",
+  "nodes": [
+    {
+      "id": "BR_Global",
+      "root": true,
+      "columns": [
+        {
+          "name": "br_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "connections",
+          "type": {
+            "key": {
+              "refTable": "Connection",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ssl",
+          "type": {
+            "key": {
+              "refTable": "SSL",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Bridge",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Connection",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "inactivity_probe",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "is_connected",
+          "type": "boolean"
+        },
+        {
+          "name": "max_backoff",
+          "type": {
+            "key": {
+              "minInteger": 1000,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Logical_Flow",
+      "root": true,
+      "columns": [
+        {
+          "name": "actions",
+          "type": "string"
+        },
+        {
+          "name": "bridge",
+          "type": {
+            "key": {
+              "refTable": "Bridge",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          },
+          "index": true
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "match",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "priority",
+          "type": {
+            "key": {
+              "maxInteger": 65535,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "table_id",
+          "type": {
+            "key": {
+              "maxInteger": 100,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          },
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "SSL",
+      "columns": [
+        {
+          "name": "bootstrap_ca_cert",
+          "type": "boolean"
+        },
+        {
+          "name": "ca_cert",
+          "type": "string"
+        },
+        {
+          "name": "certificate",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "private_key",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphers",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphersuites",
+          "type": "string"
+        },
+        {
+          "name": "ssl_protocols",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "BR_Global",
+      "target": "Connection",
+      "label": "connections",
+      "kind": "key"
+    },
+    {
+      "source": "BR_Global",
+      "target": "SSL",
+      "label": "ssl",
+      "kind": "key"
+    },
+    {
+      "source": "Logical_Flow",
+      "target": "Bridge",
+      "label": "bridge",
+      "kind": "key"
+    }
+  ]
+}

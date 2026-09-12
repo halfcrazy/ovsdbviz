@@ -1,5 +1,7 @@
 # ovsdbviz
 
+**[Interactive demo](https://halfcrazy.github.io/ovsdbviz/)** — all schemas from the latest OVS/OVN trees, rendered in your browser (requires GitHub Pages enabled: Settings → Pages → Deploy from branch → `master` → `/docs`).
+
 ## How to run
 
 ```
@@ -13,13 +15,13 @@ $ open ./ovsdb.png
 
 ## Interactive HTML output
 
-`--format html` 生成单个自包含 HTML（Cytoscape.js + ELK 布局，经 CDN 加载，无需构建）：
+`--format html` produces a single self-contained HTML file (Cytoscape.js + ELK layered layout via CDN, no build step):
 
-- 支持多个 schema（`--schema` 可重复，或直接跟多个文件参数），页面顶部下拉切换
-- 点击表名节点：高亮其所有直接/间接（传递闭包）关联的表，弱化其余；勾选"隐藏无关"则直接隐藏
-- 点击空白处重置高亮；点击节点后右侧栏展示该表全部列及类型
-- 边的颜色：红色 = key 引用，蓝色 = value 引用，点线 = weak reference（RFC 7047）
-- 页面上的"加载 JSON…"可追加加载 `--format json` 生成的 schema 文件
+- Multiple schemas in one page: repeat `--schema` or pass files as positional args; switch schemas from the dropdown
+- Click a table: keeps only its direct & transitive relations and re-layouts the subgraph (fewer crossings); click blank space to restore
+- Edges leave from the exact field row, like Graphviz record ports; red = key reference, blue = value reference, dotted = weak reference (RFC 7047)
+- "Show all columns" renders every column as a record row; by default only referencing columns are shown
+- "Load JSON…" adds schemas generated with `--format json` at runtime
 
 ```
 $ ./ovsdbviz --format html --out ./ovsdb.html examples/*.ovsschema

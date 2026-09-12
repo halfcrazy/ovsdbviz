@@ -1,0 +1,679 @@
+{
+  "name": "OVN_IC_Southbound",
+  "version": "2.7.0",
+  "nodes": [
+    {
+      "id": "Address_Set",
+      "root": true,
+      "columns": [
+        {
+          "name": "addresses",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "availability_zone",
+          "type": {
+            "key": {
+              "refTable": "Availability_Zone",
+              "type": "uuid"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Availability_Zone",
+      "root": true,
+      "columns": [
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "nb_ic_cfg",
+          "type": {
+            "key": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Connection",
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "inactivity_probe",
+          "type": {
+            "key": "integer",
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "is_connected",
+          "type": "boolean"
+        },
+        {
+          "name": "max_backoff",
+          "type": {
+            "key": {
+              "minInteger": 1000,
+              "type": "integer"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "other_config",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Datapath_Binding",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "nb_ic_uuid",
+          "type": {
+            "key": {
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          },
+          "index": true
+        },
+        {
+          "name": "transit_switch",
+          "type": "string"
+        },
+        {
+          "name": "tunnel_key",
+          "type": {
+            "key": {
+              "maxInteger": 16777215,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "transit-switch",
+                  "transit-router"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Encap",
+      "columns": [
+        {
+          "name": "gateway_name",
+          "type": "string"
+        },
+        {
+          "name": "ip",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "geneve",
+                  "vxlan"
+                ]
+              ],
+              "type": "string"
+            }
+          },
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "Gateway",
+      "root": true,
+      "columns": [
+        {
+          "name": "availability_zone",
+          "type": {
+            "key": {
+              "refTable": "Availability_Zone",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "encaps",
+          "type": {
+            "key": {
+              "refTable": "Encap",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 1
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "hostname",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "IC_SB_Global",
+      "root": true,
+      "columns": [
+        {
+          "name": "connections",
+          "type": {
+            "key": {
+              "refTable": "Connection",
+              "type": "uuid"
+            },
+            "max": "unlimited",
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "nb_ic_cfg",
+          "type": {
+            "key": "integer"
+          }
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ssl",
+          "type": {
+            "key": {
+              "refTable": "SSL",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Port_Binding",
+      "root": true,
+      "columns": [
+        {
+          "name": "address",
+          "type": "string"
+        },
+        {
+          "name": "availability_zone",
+          "type": {
+            "key": {
+              "refTable": "Availability_Zone",
+              "type": "uuid"
+            }
+          }
+        },
+        {
+          "name": "encap",
+          "type": {
+            "key": {
+              "refTable": "Encap",
+              "refType": "weak",
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "gateway",
+          "type": "string"
+        },
+        {
+          "name": "logical_port",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "nb_ic_uuid",
+          "type": {
+            "key": {
+              "type": "uuid"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "transit_switch",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "tunnel_key",
+          "type": {
+            "key": {
+              "maxInteger": 32767,
+              "minInteger": 1,
+              "type": "integer"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "transit-switch-port",
+                  "transit-router-port"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "Route",
+      "root": true,
+      "columns": [
+        {
+          "name": "availability_zone",
+          "type": {
+            "key": {
+              "refTable": "Availability_Zone",
+              "type": "uuid"
+            }
+          },
+          "index": true
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ip_prefix",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "nexthop",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "origin",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "connected",
+                  "static",
+                  "loadbalancer",
+                  "connected-dynamic"
+                ]
+              ],
+              "type": "string"
+            }
+          }
+        },
+        {
+          "name": "route_table",
+          "type": "string",
+          "index": true
+        },
+        {
+          "name": "transit_switch",
+          "type": "string",
+          "index": true
+        }
+      ]
+    },
+    {
+      "id": "SSL",
+      "columns": [
+        {
+          "name": "bootstrap_ca_cert",
+          "type": "boolean"
+        },
+        {
+          "name": "ca_cert",
+          "type": "string"
+        },
+        {
+          "name": "certificate",
+          "type": "string"
+        },
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "private_key",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphers",
+          "type": "string"
+        },
+        {
+          "name": "ssl_ciphersuites",
+          "type": "string"
+        },
+        {
+          "name": "ssl_protocols",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "Service_Monitor",
+      "root": true,
+      "columns": [
+        {
+          "name": "external_ids",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "ip",
+          "type": "string"
+        },
+        {
+          "name": "logical_port",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": {
+            "key": "string",
+            "max": "unlimited",
+            "min": 0,
+            "value": "string"
+          }
+        },
+        {
+          "name": "port",
+          "type": {
+            "key": {
+              "maxInteger": 65535,
+              "minInteger": 0,
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "name": "protocol",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "tcp",
+                  "udp"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "source_availability_zone",
+          "type": "string"
+        },
+        {
+          "name": "src_ip",
+          "type": "string"
+        },
+        {
+          "name": "src_mac",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "online",
+                  "offline",
+                  "error"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        },
+        {
+          "name": "target_availability_zone",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": {
+            "key": {
+              "enum": [
+                "set",
+                [
+                  "load-balancer"
+                ]
+              ],
+              "type": "string"
+            },
+            "max": 1,
+            "min": 0
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "Address_Set",
+      "target": "Availability_Zone",
+      "label": "availability_zone",
+      "kind": "key"
+    },
+    {
+      "source": "Gateway",
+      "target": "Availability_Zone",
+      "label": "availability_zone",
+      "kind": "key"
+    },
+    {
+      "source": "Gateway",
+      "target": "Encap",
+      "label": "encaps",
+      "kind": "key"
+    },
+    {
+      "source": "IC_SB_Global",
+      "target": "Connection",
+      "label": "connections",
+      "kind": "key"
+    },
+    {
+      "source": "IC_SB_Global",
+      "target": "SSL",
+      "label": "ssl",
+      "kind": "key"
+    },
+    {
+      "source": "Port_Binding",
+      "target": "Availability_Zone",
+      "label": "availability_zone",
+      "kind": "key"
+    },
+    {
+      "source": "Port_Binding",
+      "target": "Encap",
+      "label": "encap",
+      "kind": "key",
+      "weak": true
+    },
+    {
+      "source": "Route",
+      "target": "Availability_Zone",
+      "label": "availability_zone",
+      "kind": "key"
+    }
+  ]
+}

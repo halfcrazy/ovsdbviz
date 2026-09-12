@@ -1,10 +1,12 @@
 {
     "name": "OVN_IC_Northbound",
-    "version": "1.0.0",
-    "cksum": "45589876 3383",
+    "version": "1.4.0",
+    "cksum": "518084103 6175",
     "tables": {
         "IC_NB_Global": {
             "columns": {
+                "nb_ic_cfg": {"type": {"key": "integer"}},
+                "sb_ic_cfg": {"type": {"key": "integer"}},
                 "external_ids": {
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}},
@@ -22,9 +24,31 @@
                              "min": 0, "max": "unlimited"}}},
             "maxRows": 1,
             "isRoot": true},
+        "Transit_Switch_Port": {
+            "columns": {
+                "name": {"type": "string"},
+                "other_config": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}},
+                "type": {"type": "string"},
+                "chassis": {"type": "string"},
+                "peer": {"type": "string"},
+                "addresses": {"type": {"key": "string",
+                                       "min": 0,
+                                       "max": "unlimited"}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": false,
+            "indexes": [["name"]]},
         "Transit_Switch": {
             "columns": {
                 "name": {"type": "string"},
+                "ports": {"type": {"key": {"type": "uuid",
+                                           "refTable": "Transit_Switch_Port",
+                                           "refType": "strong"},
+                                   "min": 0,
+                                   "max": "unlimited"}},
                 "other_config": {
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}},
@@ -32,6 +56,38 @@
                     "type": {"key": "string", "value": "string",
                              "min": 0, "max": "unlimited"}}},
             "isRoot": true,
+            "indexes": [["name"]]},
+        "Transit_Router": {
+            "columns": {
+                "name": {"type": "string"},
+                "ports": {"type": {"key": {"type": "uuid",
+                                           "refTable": "Transit_Router_Port",
+                                           "refType": "strong"},
+                                   "min": 0,
+                                   "max": "unlimited"}},
+                "other_config": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": true,
+            "indexes": [["name"]]},
+        "Transit_Router_Port": {
+            "columns": {
+                "name": {"type": "string"},
+                "other_config": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}},
+                "mac": {"type": "string"},
+                "chassis": {"type": "string"},
+                "networks": {"type": {"key": "string",
+                                      "min": 0,
+                                      "max": "unlimited"}},
+                "tr_uuid": {"type": {"key": {"type": "uuid"},
+                                     "min": 1,
+                                     "max": 1}}},
+            "isRoot": false,
             "indexes": [["name"]]},
         "Connection": {
             "columns": {
@@ -66,6 +122,7 @@
                 "bootstrap_ca_cert": {"type": "boolean"},
                 "ssl_protocols": {"type": "string"},
                 "ssl_ciphers": {"type": "string"},
+                "ssl_ciphersuites": {"type": "string"},
                 "external_ids": {"type": {"key": "string",
                                           "value": "string",
                                           "min": 0,
