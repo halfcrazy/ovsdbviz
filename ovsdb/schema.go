@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"sort"
 )
 
 type DatabaseSchema struct {
@@ -19,16 +20,19 @@ type DatabaseSchema struct {
 }
 
 // OrderedColumns returns all column names ordered by a numeric index for each
-// table in the schema
+// table in the schema. 列名排序保证同一 schema 每次生成的输出一致。
 func (database DatabaseSchema) OrderedColumns() map[string][]string {
 	tableColumnOrder := make(map[string][]string)
 
 	for tableName, table := range database.Tables {
 		var columnOrder []string
 		columnOrder = append(columnOrder, tableName)
+		var columnNames []string
 		for columnName := range table.Columns {
-			columnOrder = append(columnOrder, columnName)
+			columnNames = append(columnNames, columnName)
 		}
+		sort.Strings(columnNames)
+		columnOrder = append(columnOrder, columnNames...)
 		tableColumnOrder[tableName] = columnOrder
 	}
 

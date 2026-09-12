@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>ovsdbviz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #bar { display: flex; gap: 12px; align-items: center; padding: 6px 12px; background: #2d3748; color: #fff; }
+  #bar select { font-size: 14px; }
+  #bar label { font-size: 13px; cursor: pointer; }
+  #bar .file-btn { font-size: 13px; color: #cbd5e0; cursor: pointer; }
+  #main { display: flex; height: calc(100% - 41px); }
+  #cy { flex: 1; }
+  #info { width: 300px; overflow: auto; border-left: 1px solid #ccc; padding: 10px; font-size: 13px; display: none; }
+  #info h3 { margin: 0 0 8px; }
+  #info table { border-collapse: collapse; width: 100%; }
+  #info td { border: 1px solid #e2e8f0; padding: 3px 6px; vertical-align: top; word-break: break-all; }
+  #info td.idx { color: #b7791f; }
+  .hint { color: #a0aec0; font-size: 12px; margin-left: auto; }
+</style>
+</head>
+<body>
+<div id="bar">
+  <select id="schema-select"></select>
+  <label class="file-btn">加载 JSON…<input id="file-input" type="file" accept=".json" multiple hidden></label>
+  <label><input id="hide-mode" type="checkbox"> 隐藏无关</label>
+  <span class="hint">点击表名节点：高亮所有直接/间接关联；点击空白处：重置</span>
+</div>
+<div id="main">
+  <div id="cy"></div>
+  <div id="info"></div>
+</div>
+
+<script src="https://unpkg.com/cytoscape@3.34.3/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/elkjs@0.9.3/lib/elk.bundled.js"></script>
+<script src="https://unpkg.com/cytoscape-elk@2.5.0/dist/cytoscape-elk.js"></script>
+<script>
+const SCHEMAS = /*__DATA__*/[];
+
+const KIND_COLOR = { key: '#e53e3e', value: '#3182ce' };
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  wheelSensitivity: 0.2,
+  style: [
+    { selector: 'node', style: {
+      'label': 'data(label)', 'shape': 'round-rectangle',
+      'width': 'label', 'height': 'label', 'padding': '12px',
+      'background-color': '#76d7c4', 'border-width': 1, 'border-color': '#45b39d',
+      'font-size': 13, 'text-valign': 'center', 'text-halign': 'center',
+    }},
+    { selector: 'node[root]', style: { 'border-width': 3, 'border-color': '#b7791f' } },
+    { selector: 'edge', style: {
+      'width': 1.5, 'line-color': '#a0aec0', 'target-arrow-shape': 'triangle',
+      'target-arrow-color': '#a0aec0', 'curve-style': 'bezier',
+      'label': 'data(label)', 'font-size': 10, 'color': '#718096',
+      'text-rotation': 'autorotate', 'text-margin-y': -6,
+    }},
+    { selector: 'edge[kind="key"]',   style: { 'line-color': KIND_COLOR.key,   'target-arrow-color': KIND_COLOR.key } },
+    { selector: 'edge[kind="value"]', style: { 'line-color': KIND_COLOR.value, 'target-arrow-color': KIND_COLOR.value, 'line-style': 'dashed' } },
+    { selector: 'edge[weak]',   style: { 'line-style': 'dotted' } },
+    { selector: '.highlight', style: { 'border-width': 3, 'border-color': '#dd6b20' } },
+    { selector: '.dim',    style: { 'opacity': 0.12, 'events': 'no' } },
+    { selector: '.hidden', style: { 'display': 'none' } },
+  ],
+  layout: { name: 'elk', elk: {
+    'algorithm': 'layered',
+    'elk.direction': 'RIGHT',
+    'elk.spacing.nodeNode': 30,
+    'elk.layered.spacing.nodeNodeBetweenLayers': 80,
+    'elk.edgeRouting': 'SPLINES',
+  }},
+});
+
+// RFC 7047 类型描述 → 紧凑字符串，如 [uuid→Port]、{string: uuid→QoS}
+function typeStr(t) {
+  if (typeof t === 'string') return t;
+  if (!t || typeof t !== 'object') return '';
+  const atom = a => {
+    if (!a) return '';
+    if (typeof a === 'string') return a;
+    if (a.refTable) return 'uuid→' + a.refTable + (a.refType === 'weak' ? '(weak)' : '');
+    return a.type || '';
+  };
+  let s = t.value ? '{' + atom(t.key) + ': ' + atom(t.value) + '}' : atom(t.key);
+  if (t.max !== undefined && t.max !== 1) s = '[' + s + ']';
+  return s;
+}
+
+const select = document.getElementById('schema-select');
+function refreshSelect() {
+  select.innerHTML = SCHEMAS.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
+}
+
+function render(schema) {
+  cy.elements().remove();
+  document.getElementById('info').style.display = 'none';
+  cy.add(schema.nodes.map(n => ({ data: { id: n.id, label: n.id, root: !!n.root, columns: n.columns } })));
+  cy.add(schema.edges.map((e, i) => ({ data: {
+    id: 'e' + i, source: e.source, target: e.target,
+    label: e.label, kind: e.kind, weak: !!e.weak,
+  }})));
+  cy.layout({ name: 'elk', elk: cy.options().layout.elk }).run();
+}
+
+function showInfo(node) {
+  const d = node.data();
+  const rows = d.columns.map(c =>
+    `<tr><td class="${c.index ? 'idx' : ''}">${c.name}${c.index ? ' ◆' : ''}</td><td>${typeStr(c.type)}</td></tr>`
+  ).join('');
+  const info = document.getElementById('info');
+  info.innerHTML = `<h3>${d.id}${d.root ? ' (root)' : ''}</h3><table>${rows}</table>`;
+  info.style.display = 'block';
+}
+
+function clearFocus() {
+  cy.elements().removeClass('highlight dim hidden');
+  document.getElementById('info').style.display = 'none';
+}
+
+// successors/predecessors 为递归（传递闭包）语义
+cy.on('tap', 'node', e => {
+  const keep = e.target.successors().union(e.target.predecessors()).union(e.target);
+  clearFocus();
+  e.target.addClass('highlight');
+  cy.elements().difference(keep).addClass(
+    document.getElementById('hide-mode').checked ? 'hidden' : 'dim');
+  showInfo(e.target);
+});
+cy.on('tap', e => { if (e.target === cy) clearFocus(); });
+
+select.onchange = () => render(SCHEMAS[select.value]);
+
+document.getElementById('file-input').onchange = async e => {
+  for (const f of e.target.files) {
+    try { SCHEMAS.push(JSON.parse(await f.text())); }
+    catch (err) { alert(`${f.name}: ${err.message}`); }
+  }
+  e.target.value = '';
+  refreshSelect();
+  select.value = SCHEMAS.length - 1;
+  render(SCHEMAS[select.value]);
+};
+
+if (SCHEMAS.length) { refreshSelect(); render(SCHEMAS[0]); }
+</script>
+</body>
+</html>

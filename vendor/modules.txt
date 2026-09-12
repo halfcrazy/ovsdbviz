@@ -7,13 +7,15 @@ github.com/awalterschulze/gographviz/internal/lexer
 github.com/awalterschulze/gographviz/internal/parser
 github.com/awalterschulze/gographviz/internal/token
 # github.com/cenkalti/hub v1.0.2
+## explicit; go 1.20
 github.com/cenkalti/hub
 # github.com/cenkalti/rpc2 v1.0.5
-## explicit
+## explicit; go 1.20
 github.com/cenkalti/rpc2
 github.com/cenkalti/rpc2/jsonrpc
 # github.com/jessevdk/go-flags v1.6.1
-## explicit
+## explicit; go 1.20
 github.com/jessevdk/go-flags
 # golang.org/x/sys v0.21.0
+## explicit; go 1.18
 golang.org/x/sys/unix
