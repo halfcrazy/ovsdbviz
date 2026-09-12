@@ -173,6 +173,35 @@ function showInfo(node) {
 // 不能开 animate：layoutstop 在动画开始时触发，会缓存到动画前的旧坐标
 let savedPos = null, focusing = false, focusEles = null;
 const layoutOpts = () => ({ name: 'elk', elk: cy.options().layout.elk });
+// ELK 看不到行级锚点，星型结构下任何目标顺序在它模型里都是零交叉；
+// 让它尊重模型顺序，由我们按字段行序喂节点（见 focusOrder）
+const focusLayoutOpts = () => ({ name: 'elk', elk: {
+  ...cy.options().layout.elk,
+  'elk.layered.considerModelOrder.strategy': 'NODES_AND_EDGES',
+  'elk.layered.crossingMinimization.forceNodeModelOrder': true,
+}});
+
+// 从焦点节点 BFS，每个节点的后继按其连接字段的行序访问，
+// 使节点发现顺序 ≈ 各层目标应处的垂直顺序
+function focusOrder(start, keep) {
+  const seen = new Set([start.id()]);
+  const order = [start];
+  const queue = [start];
+  while (queue.length) {
+    const n = queue.shift();
+    const outs = n.outgoers('edge').filter(e => keep.has(e));
+    outs.sort((a, b) => n.data('fields').indexOf(a.data('label')) - n.data('fields').indexOf(b.data('label')));
+    for (const e of outs) {
+      const t = e.target();
+      if (!seen.has(t.id())) { seen.add(t.id()); order.push(t); queue.push(t); }
+    }
+    for (const e of n.incomers('edge').filter(e => keep.has(e))) {
+      const s = e.source();
+      if (!seen.has(s.id())) { seen.add(s.id()); order.push(s); queue.push(s); }
+    }
+  }
+  return order;
+}
 
 cy.on('layoutstop', () => {
   if (focusing && focusEles) cy.fit(focusEles, 40);
@@ -202,7 +231,8 @@ cy.on('tap', 'node', e => {
   focusEles = keep;
   e.target.addClass('highlight');
   cy.elements().difference(keep).addClass('hidden');
-  keep.layout(layoutOpts()).run();
+  const ordered = cy.collection().union(focusOrder(e.target, keep)).union(keep.edges());
+  ordered.layout(focusLayoutOpts()).run();
   showInfo(e.target);
 });
 cy.on('tap', e => { if (e.target === cy) restore(); });
