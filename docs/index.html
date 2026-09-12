@@ -174,11 +174,11 @@ function showInfo(node) {
 let savedPos = null, focusing = false, focusEles = null;
 const layoutOpts = () => ({ name: 'elk', elk: cy.options().layout.elk });
 // ELK 看不到行级锚点，星型结构下任何目标顺序在它模型里都是零交叉；
-// 让它尊重模型顺序，由我们按字段行序喂节点（见 focusOrder）
+// 让它参考模型顺序（由 focusOrder 按字段行序喂节点）作为交叉最小化的提示。
+// 不能上 forceNodeModelOrder：会把每层的 BFS 顺序锁死，深层闭包反而多出大量交叉
 const focusLayoutOpts = () => ({ name: 'elk', elk: {
   ...cy.options().layout.elk,
   'elk.layered.considerModelOrder.strategy': 'NODES_AND_EDGES',
-  'elk.layered.crossingMinimization.forceNodeModelOrder': true,
 }});
 
 // 从焦点节点 BFS，每个节点的后继按其连接字段的行序访问，
