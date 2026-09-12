@@ -43,17 +43,21 @@ const cy = cytoscape({
   container: document.getElementById('cy'),
   wheelSensitivity: 0.2,
   style: [
+    // 节点 = 内联 SVG 画的 record（表头行 + 字段行，行高固定便于锚点计算）
     { selector: 'node', style: {
-      'label': 'data(label)', 'shape': 'round-rectangle',
-      'width': 'label', 'height': 'label', 'padding': '12px',
-      'background-color': '#76d7c4', 'border-width': 1, 'border-color': '#45b39d',
-      'font-size': 13, 'text-valign': 'center', 'text-halign': 'center',
-      'text-wrap': 'wrap', 'text-max-width': '240px',
+      'shape': 'rectangle', 'label': '',
+      'width': n => n.data('w'), 'height': n => n.data('h'),
+      'background-image': n => n.data('svg'),
+      'background-width': '100%', 'background-height': '100%',
+      'border-width': 0,
     }},
-    { selector: 'node[root]', style: { 'border-width': 3, 'border-color': '#b7791f' } },
     { selector: 'edge', style: {
       'width': 1.5, 'line-color': '#a0aec0', 'target-arrow-shape': 'triangle',
-      'target-arrow-color': '#a0aec0', 'curve-style': 'bezier',
+      'target-arrow-color': '#a0aec0',
+      // taxi 不支持行级锚点（会回退到节点中心），用直线保证端点钉在字段行上
+      'curve-style': 'straight',
+      // 端点锚在字段行（源）/表头行（目标）的边缘中点，仿 dot 的 port 效果
+      'source-endpoint': e => e.data('sep'), 'target-endpoint': e => e.data('tep'),
     }},
     // 边标签默认隐藏，仅在悬停或节点聚焦时显示，白底避免与连线叠印
     { selector: 'edge.show-label', style: {
@@ -98,23 +102,64 @@ function refreshSelect() {
   select.innerHTML = SCHEMAS.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
 }
 
+// record 行高为常量：表头 26px，字段行 22px；锚点按此精确换算
+const HEADER_H = 26, ROW_H = 22;
+
+const measureCtx = document.createElement('canvas').getContext('2d');
+measureCtx.font = '13px system-ui, sans-serif';
+
+function nodeSize(name, fields) {
+  const wText = Math.max(measureCtx.measureText(name).width,
+    ...fields.map(f => measureCtx.measureText(f).width), 0);
+  return { w: Math.ceil(wText) + 24, h: HEADER_H + fields.length * ROW_H };
+}
+
+function nodeSVG(name, fields, w, h) {
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const font = 'font-size="13" font-family="system-ui,sans-serif"';
+  let s = `<rect x="0.5" y="0.5" width="${w-1}" height="${h-1}" fill="#ffffff" stroke="#45b39d"/>`;
+  s += `<rect x="0.5" y="0.5" width="${w-1}" height="${HEADER_H-1}" fill="#76d7c4" stroke="#45b39d"/>`;
+  s += `<text x="${w/2}" y="17" text-anchor="middle" ${font} fill="#1a202c">${esc(name)}</text>`;
+  fields.forEach((f, i) => {
+    const y = HEADER_H + i * ROW_H;
+    s += `<line x1="0.5" y1="${y}" x2="${w-0.5}" y2="${y}" stroke="#45b39d"/>`;
+    s += `<text x="8" y="${y+15}" ${font} fill="#2d3748">${esc(f)}</text>`;
+  });
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">${s}</svg>`);
+}
+
+// 某行纵向中心相对节点中心的高度百分比（cytoscape 端点百分比的基准）
+function rowPct(h, idx) {
+  const y = idx < 0 ? HEADER_H / 2 : HEADER_H + idx * ROW_H + ROW_H / 2;
+  return (((y - h / 2) / h) * 100).toFixed(2) + '%';
+}
+
 function render(schema) {
   cy.elements().remove();
   document.getElementById('info').style.display = 'none';
-  // 节点标签 = 表名 + 含外链的列名（无关联字段不显示）
+  // 节点 = 表名 + 含外链的列（record 行），无关联字段不显示
   const refCols = {};
   schema.edges.forEach(e => (refCols[e.source] ??= []).push(e.label));
-  cy.add(schema.nodes.map(n => {
-    const cols = [...new Set(refCols[n.id] || [])];
+  const byId = {};
+  schema.nodes.forEach(n => {
+    const fields = [...new Set(refCols[n.id] || [])];
+    const { w, h } = nodeSize(n.id, fields);
+    byId[n.id] = { data: {
+      id: n.id, root: !!n.root, columns: n.columns, fields, w, h,
+      svg: nodeSVG(n.id, fields, w, h),
+    }};
+  });
+  cy.add(Object.values(byId));
+  cy.add(schema.edges.map((e, i) => {
+    const src = byId[e.source].data, dst = byId[e.target].data;
     return { data: {
-      id: n.id, root: !!n.root, columns: n.columns,
-      label: cols.length ? n.id + '\n───\n' + cols.join('\n') : n.id,
+      id: 'e' + i, source: e.source, target: e.target,
+      label: e.label, kind: e.kind, weak: !!e.weak,
+      sep: '50% ' + rowPct(src.h, src.fields.indexOf(e.label)),
+      tep: '-50% ' + rowPct(dst.h, -1),
     }};
   }));
-  cy.add(schema.edges.map((e, i) => ({ data: {
-    id: 'e' + i, source: e.source, target: e.target,
-    label: e.label, kind: e.kind, weak: !!e.weak,
-  }})));
   cy.layout({ name: 'elk', elk: cy.options().layout.elk }).run();
 }
 
