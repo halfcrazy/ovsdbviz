@@ -157,6 +157,12 @@ func (c *Client) handleRequest(req Request, method *handler, argv reflect.Value)
 func (c *Client) readRequest(req *Request) error {
 	method, ok := c.handlers[req.Method]
 	if !ok {
+		if err := c.codec.ReadRequestBody(nil); err != nil {
+			return err
+		}
+		if req.Seq == 0 {
+			return nil
+		}
 		resp := &Response{
 			Seq:   req.Seq,
 			Error: "rpc2: can't find method " + req.Method,
@@ -354,7 +360,10 @@ func (c *Client) Notify(method string, args interface{}) error {
 	c.sending.Lock()
 	defer c.sending.Unlock()
 
-	if c.shutdown || c.closing {
+	c.mutex.Lock()
+	closed := c.shutdown || c.closing
+	c.mutex.Unlock()
+	if closed {
 		return ErrShutdown
 	}
 
